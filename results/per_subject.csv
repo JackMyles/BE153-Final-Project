@@ -1,0 +1,46 @@
+model,subject,auroc
+baseline (wearable only),S10,0.9953631694790902
+baseline (wearable only),S11,0.9868809703368526
+baseline (wearable only),S13,0.9713375796178344
+baseline (wearable only),S14,0.9742241175076995
+baseline (wearable only),S15,0.9320419918246006
+baseline (wearable only),S16,0.9880974992086102
+baseline (wearable only),S17,0.9875952614502377
+baseline (wearable only),S2,0.9508800142946485
+baseline (wearable only),S3,0.8458946078431373
+baseline (wearable only),S4,1.0
+baseline (wearable only),S5,0.9599128111837684
+baseline (wearable only),S6,0.9813938198553583
+baseline (wearable only),S7,1.0
+baseline (wearable only),S8,0.9987056153919908
+baseline (wearable only),S9,0.9763318489196767
+augmented (+ cortisol),S10,0.9984299339691856
+augmented (+ cortisol),S11,0.9969205630970337
+augmented (+ cortisol),S13,0.9706298655343242
+augmented (+ cortisol),S14,0.9943615257048093
+augmented (+ cortisol),S15,0.9858169205995293
+augmented (+ cortisol),S16,0.9978157644824311
+augmented (+ cortisol),S17,0.9834150758318871
+augmented (+ cortisol),S2,0.9878495488251585
+augmented (+ cortisol),S3,0.9656522331154684
+augmented (+ cortisol),S4,1.0
+augmented (+ cortisol),S5,0.976023075536326
+augmented (+ cortisol),S6,0.9989480604865221
+augmented (+ cortisol),S7,1.0
+augmented (+ cortisol),S8,0.9976988718079837
+augmented (+ cortisol),S9,0.9996371433283854
+cortisol only,S10,0.9773000733675716
+cortisol only,S11,0.9468640020110608
+cortisol only,S13,0.7744000514701153
+cortisol only,S14,0.8231540709152649
+cortisol only,S15,0.952867583302366
+cortisol only,S16,0.9660968660968661
+cortisol only,S17,0.8731607937825399
+cortisol only,S2,0.9432323773787188
+cortisol only,S3,0.8569069989106753
+cortisol only,S4,0.9695368724070781
+cortisol only,S5,0.9566022583870069
+cortisol only,S6,0.9782873109796187
+cortisol only,S7,0.9498434168443497
+cortisol only,S8,0.8578733740292116
+cortisol only,S9,0.9934190994557149
