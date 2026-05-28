@@ -1,10 +1,15 @@
 # BE 153 Final Project — Presentation Notes
 ## *Quantifying Stress with Wearables: A Physiology + Cortisol Model*
 
-**Format:** ~10–12 slides, ~10 minutes (so target ≈ 50 s per slide).
-**Modeling style mirrors the kidney-stone example:** start with the
-biological motivation, state a mechanistic equation, fit constants to
-data, then propose an improvement.
+**Format:** ~12 minutes, 14 core slides + 1 optional (Slide 15
+"Translation" can be dropped to hit 10 min). Slide 2 goes deep on the
+stress-biology background, Slide 12 is an explicit "limitations"
+slide that frames the cortisol result as a simulation-based
+prediction, and Slide 16 sets up future biomarker work (uric acid,
+epinephrine) called out by the instructor. **Modeling style mirrors
+the kidney-stone example:** start with the biological motivation,
+state a mechanistic equation, fit constants to data, then propose an
+improvement.
 
 For each slide below:
 
@@ -32,7 +37,64 @@ For each slide below:
 
 ---
 
-### Slide 2 — Why model stress? (~50 s)
+### Slide 2 — The biology of acute stress (~65 s)
+
+**Slide:**
+- Two-pathway flow diagram (centerpiece):
+  ```
+  STRESSOR  ─►  cortex / amygdala  ─►  hypothalamus
+                                        │
+                ┌───────────────────────┴───────────────────────┐
+                ▼ (seconds, neural)              (minutes, hormonal) ▼
+        SAM axis                                              HPA axis
+        sympathetic nerves                                    CRH ➜ pituitary
+                │                                                  │
+                ▼                                                  ▼
+        adrenal MEDULLA                                    adrenal CORTEX
+        ↓                                                          ↓
+        epinephrine + norepinephrine                            cortisol
+        (+ ACh at eccrine sweat glands)
+  ```
+- Compact effects table:
+
+  | axis | mediator | onset | downstream effects |
+  |---|---|---|---|
+  | **SAM** (sympathetic) | epinephrine, NE; ACh at sweat glands | seconds | ↑ HR, ↑ BP, peripheral vasoconstriction, ↑ eccrine sweat, ↑ glucose mobilisation |
+  | **HPA** (hormonal) | cortisol | 10–20 min | gluconeogenesis, immune suppression, anti-inflammatory, behavioural modulation, negative feedback to brain |
+
+- One callout box: "Eccrine sweat glands are uniquely sympathetic-
+  *cholinergic* — they read out SAM tone *and* their sweat carries
+  free cortisol that has diffused from blood. One fluid, two
+  pathways."
+
+**Script (≈ 65 s):**
+> "Before talking about devices, let's establish what's actually
+> happening in the body. When the brain interprets a situation as
+> threatening — that decision is made by the amygdala and the
+> cortex — the hypothalamus activates two parallel response systems
+> at once. The first is the sympathetic-adrenal-medullary axis: a
+> neural pathway that fires within seconds. The sympathetic nervous
+> system signals the adrenal medulla to dump epinephrine and
+> norepinephrine into the bloodstream, driving the classic
+> fight-or-flight response — heart rate up, blood pressure up,
+> peripheral blood vessels constrict, glucose mobilises, and the
+> eccrine sweat glands activate. Those sweat glands are unusual:
+> they're sympathetic but use acetylcholine, not norepinephrine, so
+> sweat conductance is a direct readout of sympathetic tone. The
+> second system is the HPA axis: the hypothalamus releases CRH,
+> the pituitary releases ACTH, and the adrenal cortex releases
+> cortisol. This pathway is slower — cortisol peaks in saliva and
+> sweat about 10 to 20 minutes after a stressor and persists for
+> over an hour because its half-life is ~66 minutes. Cortisol is
+> the body's *dedicated* stress hormone: it mobilises glucose,
+> suppresses inflammation, modulates behaviour, and feeds back
+> negatively to shut the cascade off. Crucially, the fast SAM axis
+> drives every physical signal current wearables can read; the slow
+> HPA axis is the chemical signal they're missing."
+
+---
+
+### Slide 3 — Why model stress? (~50 s)
 
 **Slide:**
 - 3 bullets: (i) stress drives chronic disease (CV, immune, mental
@@ -44,47 +106,51 @@ For each slide below:
 - Optional small image of a smartwatch screen.
 
 **Script (≈ 50 s):**
-> "Stress is much more than a feeling — chronic HPA-axis activation
-> drives cardiovascular disease, immune dysregulation, depression, and
-> metabolic disorders. The World Health Organization expects
-> stress-related illness to become the second largest cause of
-> disability worldwide. But the way we *measure* stress today is
-> embarrassingly primitive: a survey at the doctor's office, weeks or
-> months apart. To do anything preventive, we need a continuous,
-> objective, real-world measurement — exactly the problem wearables
-> were built for."
+> "Now that we know what stress *is* biologically, why should we
+> bother measuring it continuously? Chronic activation of those same
+> two axes is a major driver of cardiovascular disease, immune
+> dysregulation, depression, and metabolic disorders. The World
+> Health Organization expects stress-related illness to become the
+> second largest cause of disability worldwide. But the way we
+> *measure* stress today is embarrassingly primitive: a survey at
+> the doctor's office, weeks or months apart. To do anything
+> preventive, we need a continuous, objective, real-world
+> measurement — exactly the problem wearables were built for."
 
 ---
 
-### Slide 3 — The biology behind a wearable stress signal (~55 s)
+### Slide 4 — Stress biology meets the wearable (~50 s)
 
 **Slide:**
-- Cartoon: stressor → amygdala → hypothalamus → HPA & sympathetic
-  axes → two outputs:
-  - Fast: ↑ HR, ↑ sweat (EDA), peripheral vasoconstriction (↓ skin
-    temperature)  — seconds
-  - Slow: ACTH → adrenal cortex → cortisol → diffuses to saliva /
-    sweat / urine — minutes
-- "What current wearables can measure today" vs "What they can't"
-- Cite Parlak 2021 (the cortisol review article).
+- Mapping table: physiological output (from prior slide) → wearable
+  sensor → typical placement.
 
-**Script (≈ 55 s):**
-> "Biologically, an acute stressor activates two parallel systems.
-> The sympathetic branch is fast — within seconds your heart rate
-> rises, sweat-gland activity goes up, and peripheral blood vessels
-> constrict so your skin cools. *All three* of these are
-> measurable from a wrist wearable today: BVP gives you heart rate,
-> EDA gives you sweat conductance, and a skin thermometer captures the
-> vasoconstriction. The slower branch is the HPA axis, which releases
-> cortisol from the adrenal cortex about 10 to 20 minutes after a
-> stressor and clears with a roughly 60-minute half-life. Critically,
-> *no current consumer wearable measures cortisol* — but recent
-> work by Parlak and colleagues has built electrochemical sweat
-> sensors that can."
+  | Stress output | Wearable sensor | Where | Latency |
+  |---|---|---|---|
+  | ↑ heart rate, ↓ HRV | PPG / BVP | wrist | < 5 s |
+  | ↑ eccrine sweating | EDA (skin conductance) | wrist, fingers | < 10 s |
+  | peripheral vasoconstriction | skin thermistor | wrist | ~ 1 min |
+  | ↑ blood cortisol | **— missing —** | (sweat OECT, Parlak 2018) | 3–20 min |
+
+- Image: photo of an Empatica E4 / Apple Watch + an inset of Parlak's
+  flexible cortisol patch.
+
+**Script (≈ 50 s):**
+> "Every wrist wearable on the market today reads the *SAM-axis*
+> outputs and only the SAM-axis outputs: photoplethysmography gives
+> heart rate and HRV, the EDA electrodes pick up the cholinergic
+> sweat burst, and a thermistor captures the peripheral
+> vasoconstriction. What no consumer device measures is the HPA-axis
+> output — cortisol — because until recently you needed a lab
+> ELISA to detect it. Parlak's group has now demonstrated a wearable
+> organic electrochemical transistor that measures sweat cortisol
+> continuously. So the question becomes: if we already model stress
+> well from the SAM channel, how much better could we do if we add
+> the HPA channel?"
 
 ---
 
-### Slide 4 — The data: WESAD (~50 s)
+### Slide 5 — The data: WESAD (~50 s)
 
 **Slide:**
 - "WESAD — Wearable Stress and Affect Detection, Schmidt et al. 2018"
@@ -108,7 +174,7 @@ For each slide below:
 
 ---
 
-### Slide 5 — A mathematical stress index (~60 s)
+### Slide 6 — A mathematical stress index (~60 s)
 
 **Slide:**
 - Equation (centerpiece):
@@ -138,7 +204,7 @@ For each slide below:
 
 ---
 
-### Slide 6 — How well does it work today? (~55 s)
+### Slide 7 — How well does it work today? (~55 s)
 
 **Slide:**
 - Insert **`figures/fig4_roc.png`** (ROC curves, but only show the
@@ -166,7 +232,7 @@ For each slide below:
 
 ---
 
-### Slide 7 — Where the model breaks (~45 s)
+### Slide 8 — Where the model breaks (~45 s)
 
 **Slide:**
 - Insert **`figures/fig7_coefficients.png`** (standardised
@@ -192,7 +258,7 @@ For each slide below:
 
 ---
 
-### Slide 8 — A chemical answer: cortisol (~60 s)
+### Slide 9 — A chemical answer: cortisol (~60 s)
 
 **Slide:**
 - Equation (centerpiece — mechanistic kinetic model):
@@ -224,7 +290,7 @@ For each slide below:
 
 ---
 
-### Slide 9 — Generating cortisol features (~40 s)
+### Slide 10 — Generating cortisol features (~40 s)
 
 **Slide:**
 - Insert **`figures/fig3_feature_distributions.png`** (or just the
@@ -236,9 +302,11 @@ For each slide below:
     (Hellhammer 2007 CVs).
   - 8% multiplicative sensor noise to mimic real OECT performance
     (Parlak 2018).
-- Reminder: "We aren't fabricating measurements — we are *predicting*
-  what a working sweat-cortisol sensor would output given the WESAD
-  ground truth."
+- Honest reminder box (foreshadows Slide 12): "These cortisol values
+  are *simulated*, not recorded — WESAD never collected cortisol.
+  We are using a literature-validated kinetic model to predict the
+  *response* a real wearable cortisol sensor would expose. Full
+  limitations covered after the headline result."
 
 **Script (≈ 40 s):**
 > "From the simulated cortisol trace I pull three features in each
@@ -253,7 +321,7 @@ For each slide below:
 
 ---
 
-### Slide 10 — The augmented model wins (~60 s)
+### Slide 11 — The augmented model wins (~60 s)
 
 **Slide:**
 - Insert **`figures/fig4_roc.png`** (all three ROC curves).
@@ -275,11 +343,57 @@ For each slide below:
 > confusion matrices: the augmented model misclassifies 5% of
 > non-stress windows as stress versus 10% before. *That* is the
 > kind of improvement that turns a stress-tracker app from a
-> curiosity into a clinical tool."
+> curiosity into a clinical tool — but with one important caveat
+> on the next slide."
 
 ---
 
-### Slide 11 — Why it works (~55 s)
+### Slide 12 — Caveats: this is proof-of-concept (~50 s)
+
+**Slide:**
+- Two-column "what we did / what we didn't" layout:
+
+  | We did | We did NOT |
+  |---|---|
+  | fit a real ML model on real WESAD physiology (15 subjects) | record cortisol on any WESAD subject |
+  | drive a literature-validated kinetic model of sweat cortisol | use a dataset that has *all* signals at the same time |
+  | report a **predicted** AUROC improvement of 0.96 → 0.99 | *measure* that improvement experimentally |
+
+- The simulation is anchored to independent literature — the
+  *direction* of the improvement is well supported even if the
+  absolute number is model-derived:
+  - **Cay 2018 (NCI)** — ~9× salivary cortisol rise tracks state
+    anxiety in real human stressors.
+  - **Parlak 2018 (Sci. Adv.)** — wearable OECT cortisol sensor
+    works in vivo with ~8 % noise.
+  - **Ramasubramanya 2025 (Biosens. Bioelectron. X)** — passive-sweat
+    cortisol biosensor matches gold-standard salivary cortisol at
+    **Pearson r = 0.92** over 48 hours of continuous wear.
+- One-line takeaway box: "The improvement is **predicted, not
+  measured** — but every building block has been independently
+  validated."
+
+**Script (≈ 50 s):**
+> "Before we move on, an honest caveat. We never measured cortisol
+> on a single WESAD subject — those values are simulated from a
+> literature-validated kinetic model. So the jump from 0.96 to
+> 0.99 AUROC is a *model-based prediction*, not a direct
+> measurement. The ideal experiment — wearable physiology and
+> continuous cortisol on the same person at the same time — does
+> not yet exist as a public dataset. What gives me confidence in
+> the *direction* of the result is independent evidence. Cay 2018
+> showed exam stress drives a nine-fold cortisol rise that tracks
+> anxiety scores. And Ramasubramanya 2025, published just this
+> past summer, demonstrated a wearable sweat-cortisol biosensor
+> that matches gold-standard saliva measurements with a Pearson
+> *r* of 0.92 over 48 hours of continuous wear. The biological
+> link, the kinetics, and the sensor accuracy are all
+> independently validated — what we've added is a quantitative
+> prediction of how much they buy you when combined."
+
+---
+
+### Slide 13 — Why it works (~55 s)
 
 **Slide:**
 - Insert **`figures/fig7_coefficients.png`** (now showing the orange
@@ -308,7 +422,7 @@ For each slide below:
 
 ---
 
-### Slide 12 — Per-subject generalization (~40 s)
+### Slide 14 — Per-subject generalization (~40 s)
 
 **Slide:**
 - Insert **`figures/fig6_per_subject_auroc.png`**.
@@ -328,54 +442,79 @@ For each slide below:
 
 ---
 
-### Slide 13 — Translation: what would the device look like? (~45 s) — *optional 12th slide*
+### Slide 15 — Translation: the path to a real device (~50 s) — *optional*
 
 **Slide:**
-- Stack: wrist-band photo + a small inset of Parlak's MS-OECT
-  (organic electrochemical transistor) sensor — credit Parlak 2018.
-- Three engineering specs the model implicitly requires:
-  - Sensor sensitivity ≈ 1 nmol/L (well within current MS-OECT range
-    of 0.01–10 μM).
-  - Sampling rate ≥ 1 min⁻¹ (continuous; current MS-OECT supports).
-  - ≤ 10 % drift over a day.
-- Bullet: "This is *not* far in the future — published in 2018 already."
+- Cortisol-sensor state of the art (improving rapidly):
 
-**Script (≈ 45 s):**
-> "What does this device actually look like? Parlak's group has
-> already demonstrated a wearable OECT sensor that detects sweat
-> cortisol from 10 nM to 10 µM with ~8% noise. That's well within
-> what my model needs: roughly one-minute updates and 1 nmol/L
-> resolution. Combine that with the BVP, EDA, and TEMP that today's
-> wrist devices already report, and the augmented model is a
-> firmware update away."
+  | sensor | year | mechanism | reported performance |
+  |---|---|---|---|
+  | Parlak MS-OECT | 2018 | molecularly imprinted polymer + OECT | 10 nM–10 µM range, ~8 % noise, in-vivo demo |
+  | AWARE-SENSOR (Ramasubramanya et al.) | 2025 | ZnO–aptamer EIS, passive sweat | **Pearson r = 0.92** vs salivary cortisol, dose-response R² = 0.98, LoD 0.91 ng/mL, **48-h continuous wear** |
+
+- The barrier is **integration**, not the chemistry:
+  - No commercial wearable today combines BVP + EDA + TEMP + ACC +
+    cortisol on one device.
+  - No public dataset records all five signals on the same person.
+- Bullet: "Engineering is now the bottleneck — the biochemistry of
+  noninvasive cortisol sensing is largely solved."
+
+**Script (≈ 50 s):**
+> "So what would the real device look like? The chemistry has come
+> a long way. Parlak's OECT sensor from 2018 first showed sweat
+> cortisol can be detected continuously and noninvasively. And just
+> this summer, Ramasubramanya and colleagues published an
+> aptamer-based wearable that tracks sweat cortisol over 48 hours
+> of continuous wear with a Pearson correlation of 0.92 against
+> gold-standard salivary cortisol. That's high enough for the kind
+> of signal my model needs. The bottleneck is no longer the
+> sensor — it's *integration*. No consumer wearable today
+> combines BVP, EDA, temperature, motion, AND a cortisol electrode
+> on the same wrist, and no public dataset records all five
+> signals together. The biochemistry is largely solved; the systems
+> engineering hasn't caught up yet."
 
 ---
 
-### Slide 14 — Take-aways + future work (~40 s)
+### Slide 16 — Take-aways + future work (~50 s)
 
 **Slide:**
 - 3 take-aways:
   1. A simple logistic stress index from wrist signals already
      reaches AUROC ≈ 0.96 on held-out subjects.
-  2. Adding *one* chemical channel — cortisol — pushes it to 0.99
-     and roughly halves false positives. The hormone provides
-     information that physical sensors fundamentally can't.
+  2. Adding *one* simulated chemical channel — cortisol — *predicts*
+     a jump to 0.99 AUROC and roughly halves false positives. The
+     hormone provides information that physical sensors fundamentally
+     can't.
   3. The math is portable: any wearable that exposes EDA, BVP, TEMP,
      ACC + a cortisol-sensitive electrode can run this on-device.
-- 2 future-work bullets:
-  - Validate on real continuous cortisol (e.g. integrate with an
-    OECT sensor like Parlak 2018).
-  - Personalisation: per-subject Bayesian update of β to track
+- 3 future-work directions:
+  - **Validate experimentally** — collect a matched multi-signal
+    dataset using a real wearable cortisol sensor (Parlak 2018 OECT
+    or Ramasubramanya 2025 aptamer platform) and retire the
+    simulation.
+  - **Expand the chemistry** — add other emerging skin/sweat
+    biomarkers identified by our instructor as promising directions:
+    *uric acid* (an oxidative-stress marker) and *epinephrine* (the
+    SAM-axis hormone, complementary to the cortisol HPA signal).
+    Wearable sensors for both are improving rapidly; data is still
+    sparse, so they are a natural next extension of the same model.
+  - **Personalisation** — per-subject Bayesian update of β to track
     individual circadian and chronic-stress baselines.
 
-**Script (≈ 40 s):**
-> "Summing up: a clean linear model on the four wrist signals that
-> every wearable already exposes hits 0.96 AUROC. Adding one
-> simulated cortisol channel takes it to 0.99 and slashes the
-> false-positive rate. Cortisol isn't a better version of HR — it's
-> a *complementary* signal, and that's why combining them works.
-> The next steps are real continuous cortisol data and per-subject
-> baselines that adapt to your circadian rhythm. Thanks — happy to
+**Script (≈ 50 s):**
+> "Summing up: a clean linear model on the four wrist signals every
+> wearable already exposes hits 0.96 AUROC. Adding one *simulated*
+> cortisol channel predicts a jump to 0.99 and a halving of false
+> positives. Cortisol isn't a better version of heart rate — it's a
+> *complementary* signal from a different physiological pathway,
+> and that's why combining them works. The most important next
+> step is replacing the simulation with real continuous cortisol
+> data. Beyond that, two other biomarkers our instructor flagged
+> look promising: uric acid as an oxidative-stress marker, and
+> epinephrine as a direct readout of the SAM axis. Wearable sensors
+> for both are emerging but the data is still sparse — so they're a
+> natural future extension of this exact model. Thanks — happy to
 > take questions."
 
 ---
@@ -398,6 +537,12 @@ For each slide below:
 5. Hellhammer, D. H., Wüst, S., Kudielka, B. M. (2007). *Salivary
    cortisol as a biomarker in stress research.* Psychoneuroendocrinology
    **34**, 163–171.
+6. Ramasubramanya, A., Singh, P., Lin, K.-C., Prasad, S.,
+   Muthukumar, S. (2025). *CIRCA: Circadian inference of rhythmicity
+   using comparative analysis from non-invasive continuous
+   measurements of cortisol and melatonin in passive perspiration.*
+   Biosensors and Bioelectronics: X **26**, 100656. doi:
+   10.1016/j.biosx.2025.100656.
 
 ---
 
@@ -405,26 +550,41 @@ For each slide below:
 
 | section | slides | seconds |
 |---|---|---|
-| Motivation + biology | 1–3 | 135 |
-| Data | 4 | 50 |
-| Baseline model | 5–7 | 160 |
-| Cortisol augmentation | 8–10 | 160 |
-| Why it works + generalization | 11–12 | 95 |
-| Translation + take-aways | 13–14 | 85 |
-| **total** | 12–14 | **≈ 11 min** |
+| Title + stress biology | 1–2 | 95 |
+| Why measure + biology→wearable | 3–4 | 100 |
+| Data | 5 | 50 |
+| Baseline model | 6–8 | 160 |
+| Cortisol augmentation | 9–11 | 160 |
+| **Caveats (proof-of-concept)** | 12 | 50 |
+| Why it works + generalization | 13–14 | 95 |
+| Translation + take-aways | 15–16 | 100 |
+| **total** | 14–16 | **≈ 13 min** |
 
-Trim slide 13 (translation) if you need to hit 10 minutes exactly —
-the core scientific story works without it.
+To hit 10 minutes exactly: drop the optional **Slide 15
+(translation)** — the core scientific story works without it —
+*and* trim Slide 2 to ~45 s by collapsing the script into the
+diagram + table. Slide 12 (caveats) should stay — it's the slide
+that earns intellectual-honesty points from the audience.
 
 ---
 
 ## Practical delivery tips
 
-- The *equation slides* (5 and 8) are where you slow down. Audience
+- The *equation slides* (6 and 9) are where you slow down. Audience
   needs ~10 s to absorb each equation visually. Don't rush past them.
-- The *result slide* (10) is your applause line. Pause after "0.96 → 0.99."
+- The *result slide* (11) is your applause line. Pause after "0.96 → 0.99."
+- **Slide 12 (caveats) immediately follows the applause line on
+  purpose** — the audience is most receptive to the simulation
+  caveat right after the big result, and getting it out yourself
+  preempts the obvious question.
+- Slide 2 is dense — point at the diagram while you talk; don't read
+  the table out loud, just gesture at it.
 - Have **`results/metrics.json`** open in case of detailed Q&A.
-- If asked "did you actually measure cortisol?" — be honest: "No,
-  I simulated it from a literature-validated kinetic model. The next
-  step is integrating a real OECT sensor, but the model's prediction
-  of how much improvement to expect is itself the contribution."
+- If asked "did you actually measure cortisol?" — your answer is
+  already on Slide 12: "No — those values came from a
+  literature-validated kinetic model. The simulation is anchored to
+  Cay 2018's 9× cortisol rise during real exam stress, and the
+  sensor accuracy assumption is anchored to Ramasubramanya 2025's
+  *r* = 0.92 sweat-vs-saliva correlation. So the 0.96 → 0.99
+  improvement is a *prediction* of what a real integrated device
+  would achieve, not a measurement of one."
