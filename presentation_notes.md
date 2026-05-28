@@ -178,8 +178,11 @@ For each slide below:
 
 **Slide:**
 - Equation (centerpiece):
+
   $S(\mathbf{x}) = \beta_0 + \sum_{k} \beta_k\,z(x_k)$
+
   $P(\text{stress}\mid \mathbf{x}) = \sigma(S(\mathbf{x})) = \frac{1}{1+e^{-S(\mathbf{x})}}$
+
 - Bullet list of features `x_k` (grouped by signal):
   - **EDA:** mean, SCL slope, SCR rate, SCR amplitude
   - **HR/HRV:** mean HR, std HR, RMSSD, SDNN, pNN50
@@ -262,7 +265,9 @@ For each slide below:
 
 **Slide:**
 - Equation (centerpiece — mechanistic kinetic model):
-  $$\frac{dC}{dt} = -\lambda\,(C - C_{\text{basal}}) + k_s\,u(t)$$
+
+  $\frac{dC}{dt} = -\lambda\,(C - C_{\text{basal}}) + k_s\,u(t)$
+
 - Parameter table (sourced from literature, cite):
   | symbol | value | source |
   |---|---|---|
