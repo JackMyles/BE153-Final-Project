@@ -210,11 +210,12 @@ For each slide below:
 
   $P(\text{stress}\mid \mathbf{x}) = \sigma(S(\mathbf{x})) = \frac{1}{1+e^{-S(\mathbf{x})}}$
 
-- Bullet list of features `x_k` (grouped by signal):
-  - **EDA:** mean, SCL slope, SCR rate, SCR amplitude
-  - **HR/HRV:** mean HR, std HR, RMSSD, SDNN, pNN50
-  - **Skin TEMP:** mean, slope, std
-  - **ACC:** mean, variance, ENMO
+- Bullet list of features `x_k` (grouped by signal, 18 total):
+  - **EDA (7):** mean, std, SCL mean, SCL slope, SCR rate,
+    SCR mean amplitude, SCR AUC
+  - **HR/HRV (5):** mean HR, std HR, RMSSD, SDNN, pNN50
+  - **Skin TEMP (3):** mean, slope, std
+  - **ACC (3):** magnitude mean, variance, ENMO
 - Footnote: "Fit by L2-regularized logistic regression,
   leave-one-subject-out CV."
 - Mention the analogy: "Same form as the kidney-stone supersaturation
@@ -291,34 +292,59 @@ For each slide below:
 ### Slide 9 — A chemical answer: cortisol (~60 s)
 
 **Slide:**
-- Equation (centerpiece — mechanistic kinetic model):
+- The full simulation pipeline is three stages — show them stacked:
 
-  $\frac{dC}{dt} = -\lambda\,(C - C_{\text{basal}}) + k_s\,u(t)$
+  **(1) Drive shaping** (raw stress label is low-pass-filtered with
+  time constant $\tau_d$ to capture the ACTH→sweat-gland delay):
 
-- Parameter table (sourced from literature, cite):
-  | symbol | value | source |
-  |---|---|---|
-  | $C_{\text{basal}}$ | ~5 nmol/L | Hellhammer 2007 |
-  | half-life $T_{1/2}=\ln 2 / \lambda$ | ~66 min | Czeisler 1999 |
-  | drive delay (sweat) | ~3 min | Parlak 2018 |
-  | peak ratio | ~9× basal under acute stress | **Cay 2018 (NCI)** |
+  $\tau_d\,\dot u_s(t) = u_{\text{label}}(t) - u_s(t)$
+
+  **(2) Kinetic ODE** (single-compartment, first-order clearance):
+
+  $\dfrac{dC}{dt} = -\lambda\,(C - C_{\text{basal}}) + k_s\,u_s(t)$
+
+  **(3) Sensor model** (per-subject baseline / gain draw +
+  multiplicative measurement noise):
+
+  $C_{\text{meas}}(t) = C(t)\,\bigl(1 + \varepsilon(t)\bigr),\quad
+   \varepsilon\sim\mathcal{N}(0, \sigma_\text{sensor}^2)$
+
+- Parameter table — split into *equation symbols* and *calibration
+  parameters* so the audience sees which ones enter directly:
+
+  | role | symbol | value | source |
+  |---|---|---|---|
+  | **Equation symbol** | $C_{\text{basal}}$ | ~5 nmol/L | Hellhammer 2007 |
+  | **Equation symbol** | $\lambda = \ln 2 / T_{1/2}$, $T_{1/2}$ ≈ 66 min | clearance rate | Czeisler 1999 |
+  | sets $u_s(t)$ smoothing | drive delay $\tau_d$ ≈ 3 min | low-pass τ on the binary label | Parlak 2018 (sweat) |
+  | sets $k_s$ | peak ratio ≈ 9× basal | calibrates $k_s = \lambda(\text{peak}-1)C_{\text{basal}}$ | **Cay 2018 (NCI)** |
+  | inter-subject variability | $\text{CV}(C_{\text{basal}})$ ≈ 35 %, $\text{CV}(\text{peak})$ ≈ 40 % | log-normal across people | Hellhammer 2007 |
+  | sensor noise | $\sigma_\text{sensor}$ ≈ 8 % (CV) | multiplicative on output | Parlak 2018 |
 - Right side: insert **`figures/fig2_cortisol_simulation.png`** (the
   simulated trace with shaded protocol).
 
-**Script (≈ 60 s):**
+**Script (≈ 70 s):**
 > "Here's the candidate chemical signal. Cortisol is the body's
 > dedicated stress hormone — released by the adrenal cortex through
 > the HPA axis whenever the brain *interprets* a situation as
-> threatening, and not for any other reason. I built a one-compartment
-> kinetic model: cortisol concentration relaxes back to its baseline
-> at a rate λ, set by the 66-minute clearance half-life, and is
-> driven up by a stress input u(t) that the brain switches on.
-> I calibrated the gain so that prolonged stress drives cortisol to
-> nine times baseline, matching the salivary-cortisol measurements in
-> Cay et al. 2018 — they showed exam stress in medical students
-> raised cortisol roughly nine-fold. The right panel shows the
-> simulated trajectory: flat at baseline, then a smooth rise during
-> and after the TSST, decaying over the next hour."
+> threatening, and not for any other reason. I model it in three
+> stages. **First**, the binary stress label gets low-pass-filtered
+> with a three-minute time constant — that's the *drive delay*,
+> the time it takes ACTH to reach the adrenal cortex and for sweat
+> glands to start excreting elevated cortisol. **Second**, the
+> kinetic ODE: a one-compartment model where cortisol relaxes back
+> to its baseline at a rate lambda — set by the 66-minute
+> clearance half-life — and is driven up by the smoothed stress
+> input. The gain $k_s$ is calibrated so that prolonged stress
+> drives cortisol to nine times baseline, matching the salivary
+> measurements in Cay 2018. That nine-fold figure is what I call
+> the *peak ratio*. **Third**, I add measurement realism on top:
+> each subject gets their own basal cortisol and peak response
+> drawn from log-normal distributions, and the sensor output
+> carries an 8 % multiplicative noise term to match what Parlak's
+> wearable OECT reports. The right panel shows the resulting
+> simulated trajectory — flat at baseline, then a smooth noisy
+> rise during and after the TSST, decaying over the next hour."
 
 ---
 
@@ -604,11 +630,11 @@ For each slide below:
 | Why measure + biology→wearable | 3–4 | 100 |
 | Data (incl. TSST validation) | 5 | 60 |
 | Baseline model | 6–8 | 160 |
-| Cortisol augmentation | 9–11 | 160 |
+| Cortisol augmentation | 9–11 | 170 |
 | **Caveats (proof-of-concept + scope)** | 12 | 55 |
 | Why it works + generalization | 13–14 | 95 |
 | Translation + take-aways | 15–16 | 100 |
-| **total** | 14–16 | **≈ 13.5 min** |
+| **total** | 14–16 | **≈ 13.7 min** |
 
 To hit 10 minutes exactly: drop the optional **Slide 15
 (translation)** — the core scientific story works without it —
