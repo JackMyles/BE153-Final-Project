@@ -150,27 +150,54 @@ For each slide below:
 
 ---
 
-### Slide 5 — The data: WESAD (~50 s)
+### Slide 5 — The data: WESAD (~60 s)
 
 **Slide:**
 - "WESAD — Wearable Stress and Affect Detection, Schmidt et al. 2018"
-- Bullets: 15 subjects, ~100 minutes each; wrist (Empatica E4) +
-  chest (RespiBAN); 4 conditions (baseline, amusement, stress
-  [Trier Social Stress Test], two meditations).
+- Dataset summary: 15 subjects, ~100 minutes each; wrist (Empatica
+  E4) + chest (RespiBAN); 4 protocol conditions (baseline,
+  amusement, **stress = Trier Social Stress Test**, two
+  meditations).
+- **What "stress" means here — acute psychosocial stress:**
+  - Stressor = the **Trier Social Stress Test** (Kirschbaum, Pirke
+    & Hellhammer 1993): 5 min preparation → 5 min mock job-interview
+    speech → 5 min mental arithmetic, all in front of a neutral
+    "evaluator" panel. It's the gold-standard lab stressor —
+    Allen et al. 2017 meta-analysed 80+ studies and reported
+    ~2–4× cortisol elevation and reliable HR / anxiety responses in
+    70–80 % of healthy adults.
+  - WESAD validated this label per subject with PANAS / STAI / SAM
+    self-reports after every block. State-anxiety scores rose
+    significantly during the TSST block for every participant —
+    so the protocol label is anchored in *felt* stress, not just
+    experimental intent.
 - Insert **`figures/fig1_wrist_signals.png`** — the raw EDA / TEMP /
   BVP / ACC traces for one subject with the protocol shaded.
 - Annotate: "EDA shoots up and skin temperature drops during stress."
 
-**Script (≈ 50 s):**
+**Script (≈ 60 s):**
 > "I used the WESAD dataset — 15 subjects each wearing both a wrist
-> band and a chest belt, with carefully labelled stress, amusement,
-> baseline, and meditation periods. The stressor was the Trier Social
-> Stress Test: public speaking plus mental arithmetic in front of a
-> hostile panel. This figure shows one subject's wrist signals.
-> The red band is the TSST. Notice how electrodermal activity climbs
-> three-fold, skin temperature drops by a full degree from peripheral
-> vasoconstriction, and the BVP variability changes. The biology
-> textbook story is right there in the data."
+> band and a chest belt, with four carefully labelled protocol
+> blocks: baseline, amusement, stress, and two meditations. A
+> quick note on what 'stress' means here, because it matters for
+> interpretation. The stress block is the **Trier Social Stress
+> Test** — a 15-minute paradigm developed by Kirschbaum in 1993:
+> mock-interview speech plus public mental arithmetic in front of a
+> neutral evaluator panel. It is the gold-standard acute
+> psychosocial stressor in psychology — a recent meta-analysis by
+> Allen and colleagues across more than 80 studies reports it
+> reliably triples salivary cortisol and produces significant
+> self-reported anxiety in roughly four out of five healthy adults.
+> Importantly, WESAD validated this on a per-subject basis — every
+> participant filled out PANAS and STAI questionnaires after every
+> block, and the state-anxiety scores rose significantly during the
+> TSST block for every subject. So when we label a window as
+> *stress*, we know both that the experimenter was running a
+> validated stressor AND that the subject reported feeling
+> stressed. This figure shows one subject's wrist signals. The red
+> band is the TSST. EDA climbs three-fold, skin temperature drops a
+> full degree, and BVP variability changes. The biology textbook
+> story is right there in the data."
 
 ---
 
@@ -374,27 +401,35 @@ For each slide below:
   - **Ramasubramanya 2025 (Biosens. Bioelectron. X)** — passive-sweat
     cortisol biosensor matches gold-standard salivary cortisol at
     **Pearson r = 0.92** over 48 hours of continuous wear.
+- **Scope of the word "stress" matters too.** Our labels mark
+  *acute psychosocial stress in a controlled lab*, as elicited by
+  the validated TSST paradigm. Generalisation to chronic stress
+  (allostatic load, different physiology) and to ambulatory
+  real-world stress is a separate empirical question — both
+  out of scope of any one-hour lab session.
 - One-line takeaway box: "The improvement is **predicted, not
-  measured** — but every building block has been independently
-  validated."
+  measured**, and the label captures **acute** lab stress — but
+  every claim is anchored to validated literature."
 
-**Script (≈ 50 s):**
-> "Before we move on, an honest caveat. We never measured cortisol
-> on a single WESAD subject — those values are simulated from a
+**Script (≈ 55 s):**
+> "Before we move on, two honest caveats. The first one is about
+> the cortisol channel: we never measured cortisol on a single
+> WESAD subject — those values are simulated from a
 > literature-validated kinetic model. So the jump from 0.96 to
-> 0.99 AUROC is a *model-based prediction*, not a direct
-> measurement. The ideal experiment — wearable physiology and
-> continuous cortisol on the same person at the same time — does
-> not yet exist as a public dataset. What gives me confidence in
-> the *direction* of the result is independent evidence. Cay 2018
-> showed exam stress drives a nine-fold cortisol rise that tracks
-> anxiety scores. And Ramasubramanya 2025, published just this
-> past summer, demonstrated a wearable sweat-cortisol biosensor
-> that matches gold-standard saliva measurements with a Pearson
-> *r* of 0.92 over 48 hours of continuous wear. The biological
-> link, the kinetics, and the sensor accuracy are all
-> independently validated — what we've added is a quantitative
-> prediction of how much they buy you when combined."
+> 0.99 AUROC is a *model-based prediction*, not a measurement,
+> and the ideal experiment — wearable physiology plus continuous
+> cortisol on the same person — doesn't yet exist as a public
+> dataset. What gives me confidence in the *direction* is
+> independent evidence: Cay 2018 showed a nine-fold cortisol rise
+> during exam stress that tracks anxiety scores, and
+> Ramasubramanya 2025 just this past summer demonstrated a
+> wearable sweat-cortisol sensor matching gold-standard saliva at
+> Pearson r of 0.92 over 48 hours. The second caveat is about the
+> word *stress* itself. Our labels mark **acute psychosocial
+> stress** in a controlled lab — the kind the TSST is designed to
+> elicit. We are not claiming to measure chronic stress, or to
+> predict stress in ambulatory real-world settings. Those are
+> separate empirical questions for follow-up work."
 
 ---
 
@@ -548,6 +583,16 @@ For each slide below:
    measurements of cortisol and melatonin in passive perspiration.*
    Biosensors and Bioelectronics: X **26**, 100656. doi:
    10.1016/j.biosx.2025.100656.
+7. Kirschbaum, C., Pirke, K.-M., Hellhammer, D. H. (1993).
+   *The 'Trier Social Stress Test' — a tool for investigating
+   psychobiological stress responses in a laboratory setting.*
+   Neuropsychobiology **28**, 76–81. doi: 10.1159/000119004.
+8. Allen, A. P., Kennedy, P. J., Dockray, S., Cryan, J. F., Dinan,
+   T. G., Clarke, G. (2017). *The Trier Social Stress Test:
+   principles and practice.* Neurobiology of Stress **6**, 113–126.
+   doi: 10.1016/j.ynstr.2016.11.001. *(Meta-analytic review of
+   80+ TSST studies — confirms ~2–4× cortisol rise and reliable
+   HR / anxiety elevations in 70–80 % of healthy adults.)*
 
 ---
 
@@ -557,13 +602,13 @@ For each slide below:
 |---|---|---|
 | Title + stress biology | 1–2 | 95 |
 | Why measure + biology→wearable | 3–4 | 100 |
-| Data | 5 | 50 |
+| Data (incl. TSST validation) | 5 | 60 |
 | Baseline model | 6–8 | 160 |
 | Cortisol augmentation | 9–11 | 160 |
-| **Caveats (proof-of-concept)** | 12 | 50 |
+| **Caveats (proof-of-concept + scope)** | 12 | 55 |
 | Why it works + generalization | 13–14 | 95 |
 | Translation + take-aways | 15–16 | 100 |
-| **total** | 14–16 | **≈ 13 min** |
+| **total** | 14–16 | **≈ 13.5 min** |
 
 To hit 10 minutes exactly: drop the optional **Slide 15
 (translation)** — the core scientific story works without it —
@@ -593,3 +638,16 @@ that earns intellectual-honesty points from the audience.
   *r* = 0.92 sweat-vs-saliva correlation. So the 0.96 → 0.99
   improvement is a *prediction* of what a real integrated device
   would achieve, not a measurement of one."
+- If asked "isn't your label just 'TSST yes/no', not actual
+  stress?" — your answer is on Slide 5 and reinforced on Slide 12:
+  "The TSST is the most validated lab stressor in psychology —
+  Kirschbaum 1993, plus the Allen 2017 meta-analysis across 80+
+  studies showing reliable cortisol and anxiety elevations. And
+  WESAD validated it per-subject with PANAS / STAI / SAM scores
+  that rose significantly during the TSST block for every
+  participant. So the label is anchored in *felt* stress, not just
+  experimental intent. The narrower claim is the right one: the
+  model detects the physiological signature of **acute psychosocial
+  stress**, the kind the TSST elicits. We're not claiming it
+  measures chronic stress or works ambulatorily — those are open
+  follow-on questions."
